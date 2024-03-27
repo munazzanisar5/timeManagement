@@ -6,34 +6,69 @@ import bgImg from "../public/oldClock.jpeg";
 // import "react-datepicker/dist/react-datepicker.css";
 import "./App.css";
 
+
+
+
+
+const EditableDiv = ({ data, setData }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState(data);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setTempData(data);
+  };
+
+  const handleSaveClick = () => {
+    setData(tempData);
+    console.log(tempData);
+    setIsEditing(false);
+  };
+
+  // const handleCancelClick = () => {
+  //   setIsEditing(false);
+  //   setTempData(data); // Reset tempData to original value
+  // };
+
+  const handleChange = (e) => {
+    setTempData(e.target.value);
+  };
+
+  return (
+    <div>
+      {isEditing ? (
+        <div>
+          <input type="text" value={tempData} onChange={handleChange} />
+          <br />
+          <button className='rounded-full p-2 px-4 bg-amber-500 text-white' onClick={handleSaveClick}>Save</button>
+          <button className='rounded-full p-2 px-4 bg-amber-500 text-white' onClick={handleCancelClick}>Cancel</button>
+        </div>
+      ) : (
+        <div onClick={handleEditClick}>{data}</div>
+      )}
+    </div>
+  );
+};
+
+
+
+
+
 function App() {
   let [inputTask, setInputTask] = useState({
     taskName: "",
     description: "",
-    startDate:"",
-    endDate: new Date().toISOString(),
+    startDate: "",
+    endDate: "",
   });
   // comparison of dates
  
   // console.log(inputTask.startDate);
 
-  let currentDate = new Date().toISOString();
-  // console.log("str"+ strDate);
-  // console.log("cur"+currentDate);
-
-  // setInterval(function () {
-  //   console.log(currentDate);
-  //   console.log(inputTask.startDate);
-  //   if (currentDate === inputTask.startDate) {
-  //     console.log("match");
-  //     alert("Alarm! Wake up!");
-    
-  //   } else {
-  //     console.log("notmatch");
-  //     // console.log("InputDate "+strDate);
-  //     // console.log("current "+new Date());
-  //   }
-  // }, 1000);
+  let currentDate = new Date().toString();
+  // const today = new Date().toISOString().slice(0,16);
+  // console.log("current date "+ new Date().toString().slice(0,16));
+  // console.log("input date "+ inputTask.startDate);
 
   const [items, setItems] = useState([]);
   let data = [];
@@ -65,9 +100,9 @@ function App() {
   // };
 
   const handleEdit = (index,task) => {
-    // setInputTask(items[index]);
-    // console.log(task);
-    // setEditIndex(index);
+    setInputTask(items[index]);
+    console.log(task);
+    setEditIndex(index);
   };
 
   const handleRemoveField = (index) => {
@@ -92,14 +127,19 @@ function App() {
       // console.log(new Date());
       // console.log(typeof inputTask.endDate);
       
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed).toISOString();
-      
-      console.log( today);
+     
+      const today = new Date()
+      .toISOString()
+      .slice(0, 16);
+      // const currentDate = new Date().toISOString().slice(0, 16);
 
-      if (inputTask.endDate == new Date().toISOString()) {
+      // console.log("curr " + today);
+      // console.log("input " +  inputTask.startDate);
+
+      if (inputTask.startDate === today) {
             console.log("match");
             alert("Alarm! Wake up!");
+            
           
           } else {
             console.log("notmatch");
@@ -189,75 +229,9 @@ function App() {
               Create Task
             </button>
           </form>
-          {/* <p>Time Value: {items}</p> */}
-          {/* {inputData.map((data, index) => {
-            return (
-              <div key={index}>
-                <p>Input value: {data}</p>
-              </div>
-            );
-          })}
+          
 
-          {inputData.map((data, index) => {
-            return (
-              <div key={index}>
-                <p>Time value: {data}</p>
-              </div>
-            );
-          })}
-          {inputData.map((data, index) => {
-            return (
-              <div key={index}>
-                <p>Date value: {data}</p>
-              </div>
-            );
-          })} */}
-
-          {/* {items.map((taskName, index) => (
-            <div key={index}>
-              <p>Task: {task.taskName}</p>
-              <p>Description: {task.description}</p>
-              <p>Start Date: {task.startDate}</p>
-              <p>End Date: {task.endDate}</p>
-            </div>
-          ))} */}
-
-          {/* <div className="w-full text-left  border border-gray-60 rounded-lg p-3 backdrop-blur-sm bg-white/30">
-            <h2 className=" text-[#F2F3F5] font-bold my-2 text-center">Task</h2>
-            <label className="text-[#F2F3F5] font-semibold  " htmlFor="">
-              Task
-            </label>
-            <p className=" outline-none block p-1 rounded bg-[#a3a5ad] text-white mb-3 w-full placeholder:text-white">
-              {" "}
-              task
-            </p>
-            <label className="text-[#F2F3F5] font-semibold  " htmlFor="">
-              Description{" "}
-            </label>
-            <p className=" outline-none block p-1 rounded bg-[#a3a5ad] text-white mb-3 w-full placeholder:text-white">
-              {" "}
-              task
-            </p>
-            <label className="text-[#F2F3F5] font-semibold  " htmlFor="">
-              Date & Time
-            </label>
-            <p className=" outline-none block p-1 rounded bg-[#a3a5ad] text-white mb-3 w-full placeholder:text-white">
-              {" "}
-              task
-            </p>
-            <div className="btns flex justify-end gap-2">
-              <button className="bg-[#0E1116] text-white p-2 rounded-lg">
-                Edit
-              </button>
-              <button className="bg-[#0E1116] text-white p-2 rounded-lg">
-                Delet
-              </button>
-            </div>
-          </div> */}
-
-          {/* <p>Time Value: {timeInput}</p>
-        <p>Date Value: {dateInput}</p> */}
-        </div>
+         </div>
         <div className=" p-8 pt-[8rem] w-full">
           <div className="flex justify-between w-full flex-wrap  gap-8">
             {items.map((task, index) => (
@@ -276,6 +250,7 @@ function App() {
                   <p className=" outline-none block p-1 rounded bg-[#a3a5ad] text-white mb-3 w-full placeholder:text-white">
                     {task.taskName}
                   </p>
+
                   <input
                     type="text"
                     name="taskName"
@@ -300,7 +275,7 @@ function App() {
 
                 <div className="btns flex justify-end gap-2">
                   <button
-                    onClick={() => handleEdit(index,task)}
+                    onClick={() => handleEdit(task.index)}
                     className="bg-[#0E1116] text-white p-2 rounded-lg"
                   >
                     Edit
@@ -316,6 +291,7 @@ function App() {
             ))}
           </div>
         </div>
+        {/* <EditableDiv data={savedData} setData={setSavedData} /> */}
       </div>
     </>
   );
